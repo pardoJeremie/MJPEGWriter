@@ -48,6 +48,7 @@ class MJPEGWriter{
     pthread_mutex_t mutex_cout = PTHREAD_MUTEX_INITIALIZER;
     pthread_mutex_t mutex_writer = PTHREAD_MUTEX_INITIALIZER;
     Mat lastFrame;
+    bool frame_upd = false;
     int port;
 
     int _write(int sock, char *s, int len)
@@ -170,6 +171,7 @@ public:
     void write(Mat frame){
     	pthread_mutex_lock(&mutex_writer);
     	if(!frame.empty()){
+            frame_upd = true;
     		lastFrame.release();
     		lastFrame = frame.clone();
     	}

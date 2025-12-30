@@ -59,29 +59,42 @@ MJPEGWriter::Listener()
 
 void
 MJPEGWriter::Writer()
-{
+{   
     pthread_mutex_lock(&mutex_writer);
     pthread_mutex_unlock(&mutex_writer);
-    const int milis2wait = 16666;
+    
     while (this->isOpened())
     {
+        usleep(5000);
+     
         pthread_mutex_lock(&mutex_client);
         int num_connected_clients = clients.size();
         pthread_mutex_unlock(&mutex_client);
         if (!num_connected_clients) {
-            usleep(milis2wait);
+            usleep(15000);
             continue;
         }
-        pthread_t threads[NUM_CONNECTIONS];
-        int count = 0;
+        pthread_mutex_lock(&mutex_writer);
+        // write to client only when the frame is updated.
+        if(!frame_upd){
+            pthread_mutex_unlock(&mutex_writer);
+            continue;
+        }
+
+        frame_upd = false;
 
         std::vector<uchar> outbuf;
         std::vector<int> params;
         params.push_back(cv::IMWRITE_JPEG_QUALITY);
         params.push_back(quality);
-        pthread_mutex_lock(&mutex_writer);
+
         imencode(".jpg", lastFrame, outbuf, params);
+        
         pthread_mutex_unlock(&mutex_writer);
+
+
+        pthread_t threads[NUM_CONNECTIONS];
+        int count = 0;
         int outlen = outbuf.size();
 
         pthread_mutex_lock(&mutex_client);
@@ -102,7 +115,6 @@ MJPEGWriter::Writer()
             pthread_join(threads[count-1], NULL);
             delete payloads.at(count-1);
         }
-        usleep(milis2wait);
     }
 }
 
