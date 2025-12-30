@@ -1,6 +1,8 @@
 #include "MJPEGWriter.h"
-int
-main()
+#include "opencv2/video.hpp"
+#include "opencv2/videoio/videoio.hpp"
+
+int main()
 {
     MJPEGWriter test(7777);
 
