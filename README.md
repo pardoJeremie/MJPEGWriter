@@ -1,11 +1,24 @@
-# MJPEGWriter OPENCV4  (fork of JPery/MJPEGWriter)
+# MJPEGWriter OPENCV4 (fork of JPery/MJPEGWriter)
 OpenCV Video HTTP Streaming via MJPEG.
 Based on the code found in 
 [StackExchange -  CodeReview](http://codereview.stackexchange.com/questions/124321/multithreaded-mjpg-network-stream-server/156915#156915) and [Answers - OpenCV](http://answers.opencv.org/question/6976/display-iplimage-in-webbrowsers/)
 
+This fork add:
+* And update to the code to work with opencv 4;
+* New examples that do not need a connected camera;
+* Only update web client page when the frame is updated.
+
 Note: you have to write an image to the MJPEGWriter class before the start of the server.
 
-## Example main with a fix image 
+## Example main.cpp 
+Simple example looping on a small mp4 file (converted from this [gif file](https://tenor.com/fr/view/clown-fish-gif-11595728)).
+
+Note: opencv must be compiled with gstreamer (replace the cmake configuration with the following commande in the [linux installation guide](https://docs.opencv.org/4.x/d7/d9f/tutorial_linux_install.html))
+```sh
+cmake -DWITH_GSTREAMER=ON ../opencv-4.x
+```
+
+## Main code example with a fix image 
 ```C++
 #include "MJPEGWriter.h"
 #include "opencv2/video.hpp"
@@ -14,7 +27,7 @@ Note: you have to write an image to the MJPEGWriter class before the start of th
 
 int main()
 {
-    MJPEGWriter test(7777);
+    MJPEGWriter test(8080);
 
     Mat frame = cv::imread("Clown_fish_in_the_Andaman_Coral_Reef.jpg", cv::IMREAD_COLOR);
     test.start();
@@ -27,8 +40,9 @@ int main()
 
 }
 ```
+Note: [image source](https://commons.wikimedia.org/wiki/File:Clown_fish_in_the_Andaman_Coral_Reef.jpg).
 
-## Example main with a camera
+## Main code example with a camera _(compiled but not tested, example from the forked repos)_
 
 ```C++
 #include "MJPEGWriter.h"
@@ -37,7 +51,7 @@ int main()
 
 int main()
 {
-    MJPEGWriter test(7777); //Creates the MJPEGWriter class to stream on the given port
+    MJPEGWriter test(8080); //Creates the MJPEGWriter class to stream on the given port
     VideoCapture cap;
     bool ok = cap.open(0); //Opens webcam
     if (!ok)

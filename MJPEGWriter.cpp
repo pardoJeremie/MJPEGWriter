@@ -60,8 +60,9 @@ MJPEGWriter::Listener()
 void
 MJPEGWriter::Writer()
 {   
+    // wait for the 'lister()' thread to open 'this'.
     pthread_mutex_lock(&mutex_writer);
-    pthread_mutex_unlock(&mutex_writer);
+    pthread_mutex_unlock(&mutex_writer); 
     
     while (this->isOpened())
     {
@@ -75,7 +76,7 @@ MJPEGWriter::Writer()
             continue;
         }
         pthread_mutex_lock(&mutex_writer);
-        // write to client only when the frame is updated.
+        // write to the clients only when the frame is updated.
         if(!frame_upd){
             pthread_mutex_unlock(&mutex_writer);
             continue;

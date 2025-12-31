@@ -11,7 +11,7 @@
 
 std::atomic<bool> sleep_finished;
 
-// set the while existe condition 'sleep_finished' to true after a 'sleep_time_s' second of sleep
+// set the while exist condition 'sleep_finished' to true after a 'sleep_time_s' second of sleep
 void sleep_thread_func(uint sleep_time_s) {
     sleep_finished = false;
 #ifdef DEBUG
